@@ -101,3 +101,8 @@ def product_delete (request, id):
 	product = Product.objects.get(pk_product=id)
 	product.delete()
 	return redirect('product')
+
+
+#############################
+####### Teste Views #######
+#############################
