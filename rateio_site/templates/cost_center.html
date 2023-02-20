@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Cost Center</th>
+      <th scope="col">Department</th>
+      <th scope="col">P&L Group</th>
+      <th scope="col">Business</th>
+      <th scope="col">Company</th>
+      <th scope="col">Allocation Type</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in cost_center_list %}
+      <tr>
+          <td>{{i.pk_cost_center}}</td>
+          <td>
+            <a href="{% url 'cost_center_edit' i.pk_cost_center %}" class="btn">
+              {{i}}
+            </a>
+          </td>
+          <td>{{i.fk_department}}</td>
+          <td>{{i.fk_department.desc_pl_group}}</td>
+          <td>{{i.fk_business}}</td>
+          <td>{{i.fk_company}}</td>
+          <td>{{i.fk_allocation_type}}</td>
+          <td>{{i.fk_status_cost_center}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

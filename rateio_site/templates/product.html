@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Product</th>
+      <th scope="col">Segment</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in product_list %}
+      <tr>
+          <td>{{i.pk_product}}</td>
+          <td>
+            <a href="{% url 'product_edit' i.pk_product %}" class="btn">
+              {{i}}
+            </a>
+          </td>
+          <td>{{i.fk_segment}}</td>
+          <td>{{i.fk_status_product}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'product_create' %}" method = "POST">
+    {% csrf_token %}
+    {% for i in form %}
+        <label class="form-label">{{i.label}}</label>     
+        {{i}}
+        <br>
+    {% endfor %}
+    <input type="submit" value="Save">
+</form>
+
+{% endblock %}
