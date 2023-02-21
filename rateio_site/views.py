@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect
 from django.db.models import Max
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 from .models import Business, Department, Company, Cost_Center, Allocation_Type, Status_Cost_Center
 from .models import Status_Product, Segment, Product
 from .models import Access_Type, Position, City, Contract_Type, Vendor, Status_Employee, Employee
-from .forms import Cost_Center_Form, Product_Form, Sign_Up_Form
+from .forms import Cost_Center_Form, Product_Form, Sign_Up_Form, Employee_Form
 
 
 
@@ -114,6 +115,7 @@ def login_user (request):
 		username = request.POST['teste']
 		password = request.POST ['password']
 		user = authenticate(request, username=username, password=password)
+
 		if user is not None:
 			login(request, user)
 			return redirect ('home')
@@ -142,4 +144,65 @@ def register_user(request):
 		form = Sign_Up_Form()
 	return render (request, 'register.html', {'form': form})
 
+
+
+#############################
+####### Employee Views ######
+#############################
+
+def employee(request):
+	employee_list = Employee.objects.all()
+	return render (request, 'employee.html', {'employee_list': employee_list})
+
+
+def employee_create (request):
+	if request.method == 'POST':
+		form_user = Sign_Up_Form(request.POST)
+		form_employee = Employee_Form(request.POST)
+
+		if form_employee.is_valid() and form_user.is_valid(): 
+			form_user.save()
+			form_employee.save()
+			Employee.objects.filter(pk_employee=form_employee.cleaned_data['pk_employee']).update(fk_user=form_user.save())
+			return redirect ('employee')
+
+	employee_next_pk = Employee.objects.aggregate(Max('pk_employee'))['pk_employee__max'] + 1
+	form_employee = Employee_Form(initial = {'pk_employee': employee_next_pk})
+	form_user = Sign_Up_Form()
+	return render (request, 'employee_create.html', {'form_employee': form_employee, 'form_user': form_user})
+
+
+def employee_edit(request, id):
+	employee = Employee.objects.get(pk_employee=id)
+	if request.method == 'POST':
+		form_employee = Employee_Form(request.POST, instance = employee)
+
+		if form_employee.is_valid():
+			form_employee.save()
+			return redirect ('employee')
+		
+	form_employee = Employee_Form(initial = {	'pk_employee': employee.pk_employee,
+												'code_employee': employee.code_employee,
+												'desc_employee': employee.desc_employee,
+												'fk_user': employee.fk_user,
+												'fk_access_type': employee.fk_access_type,
+												'fk_position': employee.fk_position,
+												'fk_employee_leader': employee.fk_employee_leader,
+												'fk_city': employee.fk_city,
+												'fk_contract_type': employee.fk_contract_type,
+												'fk_vendor': employee.fk_vendor,
+												'fk_status_employee': employee.fk_status_employee,
+												'fk_cost_center': employee.fk_cost_center,
+												'date_admission': employee.date_admission,
+												'date_termination': employee.date_termination,
+												'fk_employee_replacing': employee.fk_employee_replacing,
+												'fk_employee_replaced_by': employee.fk_employee_replaced_by,})
+
+	return render (request, 'employee_edit.html', {'form_employee': form_employee, 'id': id})
+
+
+def employee_delete (request, id):
+	employee = Employee.objects.get(pk_employee=id)
+	employee.delete()
+	return redirect('employee')
 

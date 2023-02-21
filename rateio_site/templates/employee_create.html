@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'employee_create' %}" method = "POST">
+    {% csrf_token %}
+    {% for i in form_employee %}
+        {% if i.label != "Username" %}
+            <label class="form-label">{{i.label}}</label>     
+            {{i}}
+            <br>
+        {% endif %}
+    {% endfor %}
+    {% for j in form_user %}
+        <label class="form-label">{{j.label}}</label>     
+        {{j}}
+        <br>
+    {% endfor %}
+    <input type="submit" value="Save">
+</form>
+
+{% endblock %}

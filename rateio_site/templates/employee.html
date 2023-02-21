@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Code</th>
+      <th scope="col">Employee</th>
+      <th scope="col">User</th>
+      <th scope="col">Access Type</th>
+      <th scope="col">Position</th>
+      <th scope="col">Leader</th>
+      <th scope="col">City</th>
+      <th scope="col">Contract Type</th>
+      <th scope="col">Vendor</th>
+      <th scope="col">Status</th>
+      <th scope="col">Cost Center</th>
+      <th scope="col">Admission Date</th>
+      <th scope="col">Termination Date</th>
+      <th scope="col">Replacing</th>
+      <th scope="col">Replaced by</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in employee_list %}
+      <tr>
+          <td>{{i.pk_employee}}</td>
+          <td>{{i.code_employee}}</td>
+          <td>
+            <a href="{% url 'employee_edit' i.pk_employee %}" class="btn">
+              {{i}}
+            </a>
+          </td>
+          <td>{{i.fk_user}}</td>
+          <td>{{i.fk_access_type}}</td>
+          <td>{{i.fk_position}}</td>
+          <td>{{i.fk_employee_leader}}</td>
+          <td>{{i.fk_city}}</td>
+          <td>{{i.fk_contract_type}}</td>
+          <td>{{i.fk_vendor}}</td>
+          <td>{{i.fk_status_employee}}</td>
+          <td>{{i.fk_cost_center}}</td>
+          <td>{{i.date_admission}}</td>
+          <td>{{i.date_termination}}</td>
+          <td>{{i.fk_employee_replacing}}</td>
+          <td>{% if i.fk_employee_replaced_by == None %}
+              {% else %}
+                {{i.fk_employee_replaced_by}}
+              {% endif %}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

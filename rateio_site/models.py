@@ -195,7 +195,7 @@ class Employee (models.Model):
 	pk_employee = models.IntegerField(primary_key=True, verbose_name = "ID Employee")
 	code_employee = models.IntegerField(verbose_name = "Employee Code")
 	desc_employee = models.CharField(max_length=512, verbose_name = "Employee")
-	fk_user = models.OneToOneField(User, default = 1, verbose_name = "Username", on_delete=models.CASCADE)
+	fk_user = models.OneToOneField(User, default = None, verbose_name = "Username", on_delete=models.SET_DEFAULT, blank=True, null=True)
 	fk_access_type = models.ForeignKey (Access_Type, default = 1, verbose_name = "Access Type", on_delete = models.SET_DEFAULT)
 	fk_position = models.ForeignKey (Position, default = 1, verbose_name = "Position", on_delete = models.SET_DEFAULT)
 	fk_employee_leader = models.ForeignKey ('self', default = None, verbose_name = "Leader", on_delete = models.SET_DEFAULT, blank=True, null=True)
@@ -214,5 +214,3 @@ class Employee (models.Model):
 
 	def __str__(self):
 		return self.desc_employee
-
-

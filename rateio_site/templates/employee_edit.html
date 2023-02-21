@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<form action="{% url 'employee_edit' id %}" method = "POST">
+    {% csrf_token %}
+    {% for i in form_employee %}
+    	<label class="form-label">{{i.label}}</label>     
+    	{{i}}
+    	<br>
+    {% endfor %}
+    <input type="submit" value="Save">
+</form>
+
+<form action="{% url 'employee_delete' id %}" >
+    <input type="submit" value="Delete">
+</form>
+
+{% endblock %}
