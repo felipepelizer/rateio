@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect
+from django.db.models import Max
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from .models import Business, Department, Company, Cost_Center, Allocation_Type, Status_Cost_Center
 from .models import Status_Product, Segment, Product
-from .forms import Cost_Center_Form, Product_Form
-from django.db.models import Max
+from .models import Access_Type, Position, City, Contract_Type, Vendor, Status_Employee, Employee
+from .forms import Cost_Center_Form, Product_Form, Sign_Up_Form
+
 
 
 def home(request):
@@ -13,9 +17,8 @@ def home(request):
 ##### Cost Center Views #####
 #############################
 
-
 def cost_center(request):
-	cost_center_list = Cost_Center.objects.all()
+	cost_center_list = Cost_Center.objects.all().exclude(desc_cost_center='Undefined')
 	return render (request, 'cost_center.html', {'cost_center_list': cost_center_list})
 
 
@@ -62,7 +65,6 @@ def cost_center_delete (request, id):
 ####### Product Views #######
 #############################
 
-
 def product(request):
 	product_list = Product.objects.all()
 	return render (request, 'product.html', {'product_list': product_list})
@@ -104,5 +106,40 @@ def product_delete (request, id):
 
 
 #############################
-####### Teste Views #######
+######## User Views #########
 #############################
+
+def login_user (request):
+	if request.method == 'POST':
+		username = request.POST['teste']
+		password = request.POST ['password']
+		user = authenticate(request, username=username, password=password)
+		if user is not None:
+			login(request, user)
+			return redirect ('home')
+		else:
+			return redirect ('login')
+	else:
+		return render (request, 'login.html', {})
+
+
+def logout_user (request):
+	logout(request)
+	return redirect ('home')
+
+
+def register_user(request):
+	if request.method == 'POST':
+		form = Sign_Up_Form(request.POST)
+		if form.is_valid():
+			form.save()
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password1']
+			user = authenticate(request, username=username, password=password)
+			login(request, user)
+			return redirect ('home')
+	else:
+		form = Sign_Up_Form()
+	return render (request, 'register.html', {'form': form})
+
+
