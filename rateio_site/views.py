@@ -3,10 +3,19 @@ from django.db.models import Max
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from rest_framework import viewsets
 from .models import Business, Department, Company, Cost_Center, Allocation_Type, Status_Cost_Center
 from .models import Status_Product, Segment, Product
 from .models import Access_Type, Position, City, Contract_Type, Vendor, Status_Employee, Employee
-from .forms import Cost_Center_Form, Product_Form, Sign_Up_Form, Employee_Form
+from .models import Squad_Group, Status_Squad, Squad
+from .forms import Cost_Center_Form, Product_Form, Sign_Up_Form, Employee_Form, Squad_Form
+from .serializers import Cost_Center_Serializer
+
+
+class Cost_Center_View(viewsets.ModelViewSet):
+    serializer_class = Cost_Center_Serializer
+    queryset = Cost_Center.objects.all()
+
 
 
 
@@ -206,3 +215,46 @@ def employee_delete (request, id):
 	employee.delete()
 	return redirect('employee')
 
+
+#############################
+######## Squad Views ########
+#############################
+
+def squad(request):
+	squad_list = Squad.objects.all()
+	return render (request, 'squad.html', {'squad_list': squad_list})
+
+
+def squad_create (request):
+	if request.method == 'POST':
+		form = Squad_Form(request.POST)
+
+		if form.is_valid():
+			form.save()
+			return redirect ('squad')
+
+	squad_next_pk = Squad.objects.aggregate(Max('pk_squad'))['pk_squad__max'] + 1
+	form = Squad_Form(initial = {'pk_squad': squad_next_pk})
+	return render (request, 'squad_create.html', {'form': form})
+
+
+def squad_edit(request, id):
+	squad = Squad.objects.get(pk_squad=id)
+	if request.method == 'POST':
+		form = Squad_Form(request.POST, instance = squad)
+
+		if form.is_valid():
+			form.save()
+			return redirect ('squad')
+		
+	form = Squad_Form(initial = {	'pk_squad': squad.pk_squad,
+									'desc_squad': squad.desc_squad,
+									'fk_squad_group': squad.fk_squad_group,
+									'fk_status_squad': squad.fk_status_squad,})
+	return render (request, 'squad_edit.html', {'form': form, 'id': id})
+
+
+def squad_delete (request, id):
+	squad = Squad.objects.get(pk_squad=id)
+	squad.delete()
+	return redirect('squad')

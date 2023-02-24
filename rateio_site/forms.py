@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Cost_Center, Product, Employee
+from .models import Cost_Center, Product, Employee, Squad
 
 
 class Cost_Center_Form(forms.ModelForm):
@@ -34,6 +34,14 @@ class Sign_Up_Form (UserCreationForm):
 class Employee_Form(forms.ModelForm):
 	class Meta:
 		model = Employee
+		fields = "__all__"
+
+	def __init__ (self, *args, **kwargs):
+			super().__init__(*args, **kwargs)
+
+class Squad_Form(forms.ModelForm):
+	class Meta:
+		model = Squad
 		fields = "__all__"
 
 	def __init__ (self, *args, **kwargs):

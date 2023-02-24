@@ -214,3 +214,83 @@ class Employee (models.Model):
 
 	def __str__(self):
 		return self.desc_employee
+
+
+##############################
+######## Squad Models ########
+##############################
+
+
+class Squad_Group (models.Model):
+	pk_squad_group = models.IntegerField(primary_key=True, verbose_name = "ID Squad Group")
+	desc_squad_group = models.CharField(max_length=512, verbose_name = "Squad Group", null=True)
+
+	class Meta:
+		verbose_name_plural = "Squad Group"
+
+	def __str__(self):
+		return self.desc_squad_group
+
+
+class Status_Squad (models.Model):
+	pk_status_squad = models.IntegerField(primary_key=True, verbose_name = "ID Status Squad")
+	desc_status_squad = models.CharField(max_length=512, verbose_name = "Status Squad", null=True)
+
+	class Meta:
+		verbose_name_plural = "Status Squad"
+
+	def __str__(self):
+		return self.desc_status_squad
+
+
+class Squad (models.Model):
+	pk_squad = models.IntegerField(primary_key=True, verbose_name = "ID Squad")
+	desc_squad = models.CharField(max_length=512, verbose_name = "Squad", null=True)
+	fk_squad_group = models.ForeignKey (Squad_Group, default = 1, verbose_name = "Squad Group", on_delete = models.SET_DEFAULT)
+	fk_status_squad = models.ForeignKey (Status_Squad, default = 1, verbose_name = "Status Squad", on_delete = models.SET_DEFAULT)
+
+	class Meta:
+		verbose_name_plural = "Squad"
+
+	def __str__(self):
+		return self.desc_squad
+
+
+##############################
+####### Calendar Models ######
+##############################
+
+
+class Month (models.Model):
+	pk_month = models.IntegerField(primary_key=True, verbose_name = "ID Month")
+	desc_month = models.CharField(max_length=512, verbose_name = "Month", null=True)
+	desc_ytd_ytg = models.CharField(max_length=512, verbose_name = "YTD YTG", null=True)
+
+	class Meta:
+		verbose_name_plural = "Month"
+
+	def __str__(self):
+		return self.desc_month
+
+
+class Status_Scenario (models.Model):
+	pk_status_scenario = models.IntegerField(primary_key=True, verbose_name = "ID Status Scenario")
+	desc_status_scenario = models.CharField(max_length=512, verbose_name = "Status Scenario", null=True)
+
+	class Meta:
+		verbose_name_plural = "Status Scenario"
+
+	def __str__(self):
+		return self.desc_status_scenario
+
+
+class Scenario (models.Model):
+	pk_scenario = models.IntegerField(primary_key=True, verbose_name = "ID Scenario")
+	desc_scenario = models.CharField(max_length=512, verbose_name = "Scenario", null=True)
+	fk_status_scenario = models.ForeignKey (Status_Scenario, default = 1, verbose_name = "Status Scenario", on_delete = models.SET_DEFAULT)
+
+	class Meta:
+		verbose_name_plural = "Scenario"
+
+	def __str__(self):
+		return self.desc_scenario

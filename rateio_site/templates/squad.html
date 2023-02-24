@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Squad</th>
+      <th scope="col">Squad Group</th>
+      <th scope="col">Squad Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in squad_list %}
+      <tr>
+          <td>{{i.pk_squad}}</td>
+          <td>
+            <a href="{% url 'squad_edit' i.pk_squad %}" class="btn">
+              {{i}}
+            </a>
+          </td>
+          <td>{{i.fk_squad_group}}</td>
+          <td>{{i.fk_status_squad}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
